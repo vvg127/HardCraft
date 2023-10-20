@@ -1,0 +1,4 @@
+name: HardCraft
+version: '${project.version}'
+main: org.plugin.hardcraft.HardCraft
+api-version: 1.19

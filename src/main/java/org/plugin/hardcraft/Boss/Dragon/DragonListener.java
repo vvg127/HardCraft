@@ -1,6 +1,7 @@
 package org.plugin.hardcraft.Boss.Dragon;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -12,6 +13,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -58,8 +61,15 @@ public class DragonListener implements Listener {
     @EventHandler
     public void EnderEnter(PlayerPortalEvent e) {
         Player p = e.getPlayer();
+        PlayerInventory pi = p.getInventory();
         Location toLocation = e.getTo();
         World world = toLocation.getWorld();
+
+        if (pi.contains(Material.NETHER_STAR)) {
+            pi.removeItemAnySlot(new ItemStack(Material.NETHER_STAR, 1));
+            return;
+        }
+
         if (world.getEnvironment() == World.Environment.THE_END) {
             p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, Integer.MAX_VALUE, 0, true, false));
             p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 1, true, false));

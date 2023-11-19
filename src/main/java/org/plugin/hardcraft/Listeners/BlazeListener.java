@@ -83,7 +83,7 @@ public class BlazeListener implements Listener {
                         return;
                     }
 
-                    blaze.launchProjectile(SmallFireball.class, blaze.getVelocity());
+                    blaze.launchProjectile(SmallFireball.class, blaze.getVelocity(),(SmallFireball fireball) -> fireball.setDirection(blaze.getVelocity().multiply(-1.5)));
 
                     iteration++;
 

@@ -39,6 +39,7 @@ public final class HardCraft extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new VexListener(),this);
         getServer().getPluginManager().registerEvents(new WitchListener(this),this);
         getServer().getPluginManager().registerEvents(new WitherListener(),this);
+        getServer().getPluginManager().registerEvents(new WardenListener(),this);
 
         System.out.println("난이도 증가됨");
 

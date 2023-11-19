@@ -81,23 +81,23 @@ public class DragonListener implements Listener {
     public void GetDamage(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof EnderDragon) {
             EnderDragon dragon = (EnderDragon)e.getEntity();
+            World world = dragon.getWorld();
+
             DragonProjectile.startTask(dragon);
 
-            if (dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH) == null) {
-                return;
-            }
+            if (dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH) == null) {return;}
 
             double maxHealth = dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-            World world;
+
+            if (maxHealth < dragon.getHealth() * 2.0) {e.setDamage(e.getDamage() * 2);}
+
             if (maxHealth >= dragon.getHealth() * 2.0) {
-                world = dragon.getWorld();
                 world.spawnEntity(e.getDamager().getLocation(), EntityType.ZOMBIE);
                 world.spawnEntity(e.getDamager().getLocation(), EntityType.ZOMBIE);
             }
 
             int random;
             if (maxHealth >= dragon.getHealth() * 4.0) {
-                world = dragon.getWorld();
                 world.spawnEntity(e.getDamager().getLocation(), EntityType.SHULKER);
                 world.spawnEntity(e.getDamager().getLocation(), EntityType.VEX);
                 random = (int)(Math.random() * 5.0);
@@ -186,16 +186,26 @@ public class DragonListener implements Listener {
     @EventHandler
     public void Death(EntityDeathEvent e) {
         if (e.getEntity() instanceof EnderDragon) {
-            EnderDragon dragon = (EnderDragon)e.getEntity();
+            EnderDragon dragon = (EnderDragon) e.getEntity();
             Location location = dragon.getLocation();
             Location amount = new Location(location.getWorld(), 0.0, -5.0, 0.0);
 
-            for(int i = 0; i <= 10; ++i) {
-                location.createExplosion(20.0F, true, true);
+            for(int i = 0; i <= 10; i++) {
+                location.createExplosion(100.0F, true, true);
                 location.add(amount);
             }
         }
 
+    }
+
+    @EventHandler
+    public void Fireball(EntitySpawnEvent e) {
+        if (e.getEntity() instanceof AreaEffectCloud) {
+            AreaEffectCloud effect = (AreaEffectCloud) e.getEntity();
+
+            if (effect.getSource() instanceof EnderDragon) {effect.setDuration(60);}
+
+        }
     }
 
 }

@@ -27,8 +27,10 @@ public class SkeletonListener implements Listener {
                 if (a.getShooter() instanceof Skeleton) {
 
                     e.setDamage(e.getDamage() + (double)(p.getArrowsInBody() * 3));
+
                     Skeleton s = (Skeleton)a.getShooter();
                     Location l = p.getLocation().add(p.getLocation(), 0.0, 0.0, -1.0);
+
                     a.setKnockbackStrength(10);
                     p.addPotionEffect(potion);
                     s.teleport(l);

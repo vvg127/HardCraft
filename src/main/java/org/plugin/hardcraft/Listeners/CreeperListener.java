@@ -21,18 +21,18 @@ public class CreeperListener implements Listener {
     public void PlayerDamage(EntityDamageByEntityEvent e) {
 
         if (e.getEntity() instanceof Player) {
-
             Player p = (Player) e.getEntity();
 
-            if (e.getDamager() instanceof Creeper) {
 
+            if (e.getDamager() instanceof Creeper) {
                 PlayerInventory pi = p.getInventory();
-                ItemStack[] items = pi.getArmorContents();
                 World world = p.getWorld();
+
+                ItemStack[] items = pi.getArmorContents();
 
                 Creeper creeper = (Creeper) world.spawnEntity(e.getDamager().getLocation(), EntityType.CREEPER);
                 creeper.setNoDamageTicks(100);
-                creeper.setExplosionRadius(((Creeper) e.getDamager()).getExplosionRadius() + 1);
+                creeper.setExplosionRadius(((Creeper) e.getDamager()).getExplosionRadius() * 2);
 
                 int index = (int) (Math.random() * 4);
 
@@ -46,12 +46,18 @@ public class CreeperListener implements Listener {
                 if (items[index] != null) {
                     ItemMeta meta = items[index].getItemMeta();
 
-                    if (!meta.hasEnchants()) {
+                    if (meta.hasEnchants()) {
                         Iterator<Enchantment> it = meta.getEnchants().keySet().iterator();
-                        meta.removeEnchant(it.next());
+                        Enchantment enchant = it.next();
+                        if (enchant == Enchantment.BINDING_CURSE) {
+                            if (it.hasNext()) {
+                                enchant = it.next();
+                                meta.removeEnchant(enchant);
+                            } else {meta.addEnchant(Enchantment.BINDING_CURSE,1,true);}
+                        } else {meta.removeEnchant(enchant);}
+
                     } else {
                         meta.addEnchant(Enchantment.BINDING_CURSE,1,true);
-                        meta.addEnchant(Enchantment.VANISHING_CURSE,1,true);
                     }
 
                     items[index].setItemMeta(meta);
@@ -59,12 +65,17 @@ public class CreeperListener implements Listener {
                 } else {
 
                     ItemStack item2 = pi.getItemInMainHand();
-
                     ItemMeta meta = item2.getItemMeta();
 
-                    if (!meta.hasEnchants()) {
+                    if (meta.hasEnchants()) {
                         Iterator<Enchantment> it = meta.getEnchants().keySet().iterator();
-                        meta.removeEnchant(it.next());
+                        Enchantment enchant = it.next();
+                        if (enchant == Enchantment.VANISHING_CURSE) {
+                            if (it.hasNext()) {
+                                enchant = it.next();
+                                meta.removeEnchant(enchant);
+                            } else {meta.addEnchant(Enchantment.VANISHING_CURSE,1,true);}
+                        } else {meta.removeEnchant(enchant);}
                     } else {
                         meta.addEnchant(Enchantment.VANISHING_CURSE,1,true);
                     }

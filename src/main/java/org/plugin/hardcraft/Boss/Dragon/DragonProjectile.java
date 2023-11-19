@@ -1,6 +1,5 @@
 package org.plugin.hardcraft.Boss.Dragon;
 
-import org.bukkit.Location;
 import org.bukkit.entity.DragonFireball;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,11 +23,13 @@ public class DragonProjectile extends BukkitRunnable {
             return;
         }
 
-        Location dragonLocation = dragon.getLocation();
-
-        DragonFireball fireball = dragon.launchProjectile(DragonFireball.class, dragonLocation.getDirection());
-        fireball.setIsIncendiary(false);
-        fireball.setYield(2.0F);
+        dragon.launchProjectile(
+                DragonFireball.class, dragon.getVelocity(),
+                (DragonFireball fireball) -> {
+                    fireball.setIsIncendiary(false);
+                    fireball.setYield(2.0F);
+                }
+        );
 
     }
 
